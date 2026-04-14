@@ -21,6 +21,7 @@ git checkout main
 git pull origin main
 
 # --- Pull today's folder ---
+echo "Pulling Day${DAY} from teacher branch..."
 git checkout teacher -- "Day${DAY}/"
 
 # --- Pull previous day's Solutions ---
