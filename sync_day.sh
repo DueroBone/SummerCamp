@@ -23,6 +23,7 @@ git pull origin main
 # --- Pull today's folder ---
 echo "Pulling Day${DAY} from teacher branch..."
 git checkout teacher -- "Day${DAY}/"
+git rm -r --ignore-unmatch "Day${DAY}/Solutions"
 
 # --- Pull previous day's Solutions ---
 if [ "$PREV" -ge 1 ]; then
