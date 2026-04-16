@@ -1,5 +1,7 @@
 package Day2.Solutions;
 
+import lib.Simplified.Wait;
+
 public class CleanupProject {
 
     // Ignore the "static" keyword for now.
@@ -9,11 +11,7 @@ public class CleanupProject {
     static int ballsCollected = 5;
     static double shooterRPM = 0.0;
 
-    /**
-     * Ignore the throws InterruptedException, it's just so the Thread.sleep()
-     * method doesn't cause an error. (More advanced than what you'll learn from me)
-     */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         // Print initial stats
         printRobotStats();
 
@@ -39,14 +37,14 @@ public class CleanupProject {
         printRobotStats();
     }
 
-    static void printRobotStats() throws InterruptedException {
+    static void printRobotStats() {
         System.out.println("Robot Stats:");
         System.out.println("Shooter Enabled: " + isShooterEnabled);
         System.out.println("Drive Speed: " + driveSpeed + " m/s");
         System.out.println("Balls Collected: " + ballsCollected);
         System.out.println("Shooter RPM: " + shooterRPM);
         System.out.println();
-        Thread.sleep(250);
+        Wait.waitSeconds(0.25); // Wait 0.25 seconds, makes it easier to read the output
     }
 
     static void shooterOn() {
