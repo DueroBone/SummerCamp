@@ -1,13 +1,18 @@
 package lib.Simplified.Motors;
 
-public class RealisticMotor {
+public class Motor {
     private int motorId;
     private SimpleEncoder encoder;
     private double current;
     private double voltage;
     private static final double MAX_RPM = 100;
 
-    public RealisticMotor(int motorId, double rpm, double current, double voltage) {
+    public Motor(int motorId) {
+        this(motorId, 0, 0, 12);
+    }
+
+    /** You shouldn't be using this. It is just for internal use. */
+    public Motor(int motorId, double rpm, double current, double voltage) {
         this.motorId = motorId;
         this.encoder = new SimpleEncoder(0, rpm);
         this.current = current;
@@ -34,16 +39,13 @@ public class RealisticMotor {
     public void set(double percent) {
         // Calculate the new RPM
         double currentRpm = encoder.getVelocity();
-        if (percent == 0) {
-            currentRpm *= 0.8; // Simulate coasting
-        } else {
-            currentRpm += percent * 10;
-        }
+        currentRpm *= 0.9; // Simulate coasting
+        currentRpm += percent * 10;
 
+        // At max RPM, the motor is working hard but not drawing too much current
         if (currentRpm > MAX_RPM) {
             currentRpm = MAX_RPM;
             this.current = 10;
-            // At max RPM, the motor is working hard but not drawing too much current
         } else if (currentRpm < -MAX_RPM) {
             currentRpm = -MAX_RPM;
             this.current = 10;

@@ -1,9 +1,8 @@
 package Day4;
 
 // Tells java where to find the Motors and SimpleMotor classes
-import lib.Simplified.Motors.Motors;
+import lib.Simplified.Motors.MotorDataGenerator;
 import lib.Simplified.Motors.SimpleMotor;
-
 
 public class MotorDataChallenge {
     /*
@@ -19,6 +18,6 @@ public class MotorDataChallenge {
      * Find if there's any weird things going on with the motors.
      */
     public static void main(String[] args) {
-        SimpleMotor[] motors = Motors.getSimpleMotorData();
+        SimpleMotor[] motors = MotorDataGenerator.getSimpleMotorData();
     }
 }

@@ -20,6 +20,24 @@ public class SimpleController {
         randomize();
     }
 
+    public void set(double leftX, double leftY, double rightX, double rightY,
+            boolean aButton, boolean bButton, boolean xButton, boolean yButton,
+            boolean leftBumper, boolean rightBumper,
+            boolean leftTrigger, boolean rightTrigger) {
+        this.leftX = leftX;
+        this.leftY = leftY;
+        this.rightX = rightX;
+        this.rightY = rightY;
+        this.aButton = aButton;
+        this.bButton = bButton;
+        this.xButton = xButton;
+        this.yButton = yButton;
+        this.leftBumper = leftBumper;
+        this.rightBumper = rightBumper;
+        this.leftTrigger = leftTrigger;
+        this.rightTrigger = rightTrigger;
+    }
+
     public void randomize() {
         // Random from -1 to 1
         this.leftX = Math.random() * 2 - 1;
