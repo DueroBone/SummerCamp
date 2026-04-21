@@ -16,6 +16,7 @@ public class Elevator extends SimulatedMechanisim {
 
         // Convert linear drum travel in meters to motor rotations.
         this.conversionFactor = gearing / (2 * Math.PI * drumRadiusMeters);
+        this.motors = motors;
 
         for (SimulatedMotor _motor : motors) {
             _motor.setMechanisim(this);
@@ -28,7 +29,7 @@ public class Elevator extends SimulatedMechanisim {
 
         elevatorSim.setInputVoltage(performCurrentLimiting(targetVoltage));
         if (getCurrent() >= 80) {
-            System.out.println("A motor is now on fire! " + Arrays.toString(motors));
+            // System.out.println("A motor is now on fire! " + Arrays.toString(motors));
         }
     }
 

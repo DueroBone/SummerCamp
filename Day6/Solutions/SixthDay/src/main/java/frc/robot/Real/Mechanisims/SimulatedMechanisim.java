@@ -33,7 +33,12 @@ public abstract class SimulatedMechanisim extends SubsystemBase {
 
         // If we're drawing more current than the average current limit,
         // scale down the voltage to simulate current limiting behavior.
-        double scale = Math.min(1.0, aveCurrentLimit / getCurrent());
+        double scale = 1.0;
+        if (getCurrent() > aveCurrentLimit) {
+            scale = aveCurrentLimit / getCurrent();
+            // System.out.println("Current limiting! Current: " + getCurrent() + " Limit: " + aveCurrentLimit + " Scale: " + scale);
+        }
         return voltage * scale;
+        // return voltage;
     }
 }

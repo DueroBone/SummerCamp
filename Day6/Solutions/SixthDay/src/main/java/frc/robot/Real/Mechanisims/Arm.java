@@ -13,7 +13,9 @@ public class Arm extends SimulatedMechanisim {
             double maxAngleRadians, double startingAngleRadians, SimulatedMotor... motors) {
         armSim = new SingleJointedArmSim(DCMotor.getNEO(motors.length), gearing, momentOfInertia,
                 armLengthMeters, minAngleRadians, maxAngleRadians, true, startingAngleRadians);
+
         this.conversionFactor = gearing / (2 * Math.PI);
+        this.motors = motors;
 
         for (SimulatedMotor _motor : motors) {
             _motor.setMechanisim(this);
@@ -26,7 +28,7 @@ public class Arm extends SimulatedMechanisim {
 
         armSim.setInputVoltage(performCurrentLimiting(targetVoltage));
         if (getCurrent() >= 80) {
-            System.out.println("A motor is now on fire! " + Arrays.toString(motors));
+            // System.out.println("A motor is now on fire! " + Arrays.toString(motors));
         }
     }
 

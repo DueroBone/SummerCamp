@@ -4,14 +4,14 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
-public class LearnSparkMax implements MotorController {
+public class LearnSparkMax extends SubsystemBase {
     private final boolean isReal;
     private SparkMax realMotor;
     private SimulatedMotor simulatedMotor;
+    private LearnEncoder encoder;
 
     public LearnSparkMax(int port, SparkMax.MotorType motorType) {
         isReal = Robot.isReal();
@@ -20,6 +20,7 @@ public class LearnSparkMax implements MotorController {
         } else {
             simulatedMotor = new SimulatedMotor(port);
         }
+        encoder = new LearnEncoder();
     }
 
     public void configure(SparkMaxConfig config, ResetMode resetMode, PersistMode persistMode) {
@@ -30,39 +31,44 @@ public class LearnSparkMax implements MotorController {
         }
     }
 
-    @Override
+    public void setVoltage(double voltage) {
+        if (isReal) {
+            realMotor.setVoltage(voltage);
+        } else {
+            simulatedMotor.setVoltage(voltage);
+        }
+    }
+
+    /** Input a value -1 to 1 as a percentage */
     public void set(double speed) {
-        // Code to set the motor speed using the Spark API
+        if (isReal) {
+            realMotor.set(speed);
+        } else {
+            simulatedMotor.set(speed);
+        }
     }
 
-    @Override
+    /** Returns the output percentage from -1 to 1 */
     public double get() {
-        // Code to get the current motor speed using the Spark API
-        return 0;
+        if (isReal) {
+            return realMotor.get();
+        } else {
+            return simulatedMotor.getVoltage() / 12;
+        }
+    }
+
+    public LearnEncoder getEncoder() {
+        return encoder;
     }
 
     @Override
-    public void setInverted(boolean isInverted) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setInverted'");
+    public void periodic() {
+        if (isReal) {
+            encoder.setPosition(realMotor.getEncoder().getPosition());
+            encoder.setVelocity(realMotor.getEncoder().getVelocity());
+        } else {
+            encoder.setPosition(simulatedMotor.getPosition());
+            encoder.setVelocity(simulatedMotor.getVelocity());
+        }
     }
-
-    @Override
-    public boolean getInverted() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getInverted'");
-    }
-
-    @Override
-    public void disable() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'disable'");
-    }
-
-    @Override
-    public void stopMotor() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'stopMotor'");
-    }
-
 }

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.Real.Mechanisims.MechanisimHolders;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +15,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
+    MechanisimHolders.generateMechanisims();
   }
 
   private void configureBindings() {

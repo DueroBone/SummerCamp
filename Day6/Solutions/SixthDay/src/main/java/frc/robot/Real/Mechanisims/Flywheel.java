@@ -24,6 +24,7 @@ public class Flywheel extends SimulatedMechanisim {
                 motor);
 
         this.conversionFactor = gearing;
+        this.motors = motors;
 
         for (SimulatedMotor _motor : motors) {
             _motor.setMechanisim(this);
@@ -39,13 +40,17 @@ public class Flywheel extends SimulatedMechanisim {
 
         flywheelSim.setInputVoltage(performCurrentLimiting(targetVoltage));
         if (getCurrent() >= 80) {
-            System.out.println("A motor is now on fire! " + Arrays.toString(motors));
+            // System.out.println("A motor is now on fire! " + Arrays.toString(motors) + getCurrent());
         }
     }
 
     @Override
     public double getRpm() {
-        return flywheelSim.getAngularVelocityRPM() / conversionFactor;
+        double rpm = flywheelSim.getAngularVelocityRPM();
+        if (Double.isNaN(rpm)) {
+            return 0;
+        }
+        return rpm / conversionFactor;
     }
 
     @Override

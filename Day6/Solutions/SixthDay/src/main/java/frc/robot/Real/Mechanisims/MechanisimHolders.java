@@ -1,31 +1,75 @@
 package frc.robot.Real.Mechanisims;
 
 import java.util.ArrayList;
-
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Real.Motors.SimulatedMotor;
 
 public class MechanisimHolders {
     public static final ArrayList<SimulatedMechanisim> simulatedMechanisims = new ArrayList<>();
     public static final ArrayList<SimulatedMotor> simulatedMotors = new ArrayList<>();
-    public static final InstantCommand generateMechanisimsCommand = new InstantCommand(() -> generateMechanisims());
+    public static boolean hasGeneratedMechanisims = false;
 
-    private static void generateMechanisims() {
-        // if all motors in a mechanisim exist in list:
-        // generate mechanisim
-        // add mechanisim to list
-        // add mechanisim to containing motors
+    private static boolean doesMotorListContain(int... ports) {
+        for (int port : ports) {
+            if (getMotorByPort(port) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-        // order checks by most specific to least specific (ex: if 4 motors, check for 4
-        // motor mechanisims first, then 3 motor mechanisims, etc.)
+    private static SimulatedMotor getMotorByPort(int port) {
+        for (SimulatedMotor motor : simulatedMotors) {
+            if (motor.getPort() == port) {
+                return motor;
+            }
+        }
+        return null;
+    }
 
-        // 1 2 3 4 Drivetrain
-        // 1 2 Drivetrain
+    public static void generateMechanisims() {
+        if (hasGeneratedMechanisims || simulatedMotors.size() != 0) {
+            // return;
+        }
 
-        // 10 11 Flywheel
+        if (doesMotorListContain(1, 2, 3, 4, 5, 6, 7, 8)
+                && !doesMotorListContain(20)) {
+            // Is from 2026 robot, create all mechanisims
 
-        // 10 Flywheel
+            // LD 1, 2
+            // RD 3, 4
+            // Shooter 5
+            // Feeder 6
+            // Intake 7
+            // Conveyor 8
+            // Climber 10, 11
+        }
+        if (doesMotorListContain(1, 2, 3, 4)) {
+            // Create 4 motor drivetrain
+        } else if (doesMotorListContain(1, 2)) {
+            // Create 2 motor drivetrain
+        }
 
-        // 20 21 Elevator
+        // TODO: get values from real flywheel
+        if (doesMotorListContain(10, 11)) {
+            // Create 2 motor flywheel
+            Flywheel flywheel = new Flywheel(0.006, 1, false,
+                    getMotorByPort(10), getMotorByPort(11));
+            simulatedMechanisims.add(flywheel);
+        } else if (doesMotorListContain(10)) {
+            // Create 1 motor flywheel
+            Flywheel flywheel = new Flywheel(0.006, 1, false,
+                    getMotorByPort(10));
+            simulatedMechanisims.add(flywheel);
+        }
+
+        // TODO: get values from real intake rotator
+        if (doesMotorListContain(20)) {
+            // Create 1 motor arm
+            Arm arm = new Arm(0, 0, 0,
+                    0, 0, 0,
+                    getMotorByPort(20));
+            simulatedMechanisims.add(arm);
+        }
+        hasGeneratedMechanisims = true;
     }
 }
