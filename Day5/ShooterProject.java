@@ -14,7 +14,6 @@ public class ShooterProject {
             // Add your code here
 
             // Do not edit below this line
-            System.out.println("Shooter speed: " + shooter.getEncoder().getVelocity());
             Wait.waitSeconds(0.1);
             timer += 1;
             if (timer == 10) {

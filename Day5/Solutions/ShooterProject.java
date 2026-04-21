@@ -1,6 +1,7 @@
 package Day5.Solutions;
 
 import lib.Simplified.Wait;
+import lib.Simplified.Inputs.ProximitySensor;
 import lib.Simplified.Motors.Motor;
 import java.nio.file.Files; // Not for students
 import java.nio.file.Paths;
@@ -9,6 +10,8 @@ import java.io.IOException;
 public class ShooterProject {
     public static void main(String[] args) {
         Motor shooter = new Motor(10);
+        Motor releaser = new Motor(11); // Challenge
+        ProximitySensor proximitySensor = new ProximitySensor(0);
 
         int targetSpeed = 0;
         int timer = 0;
@@ -32,8 +35,19 @@ public class ShooterProject {
                 }
             }
 
+            // Challenge: only release when ready
+            if (Math.abs(currentSpeed - targetSpeed) < 10 &&
+                    proximitySensor.isObjectDetected()) {
+                releaser.set(1);
+            } else {
+                releaser.set(0);
+            }
+
+            if (timer % 3 == 0) { // Challenge
+                System.out.println("Shooter speed: " + currentSpeed);
+            }
+
             // Do not edit below this line
-            System.out.println("Shooter speed: " + shooter.getEncoder().getVelocity());
             Wait.waitSeconds(0.1);
             speedHistory[timer][0] = shooter.getEncoder().getVelocity();
             speedHistory[timer][1] = targetSpeed;

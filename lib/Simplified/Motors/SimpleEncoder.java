@@ -3,6 +3,7 @@ package lib.Simplified.Motors;
 public class SimpleEncoder {
     private double position;
     private double velocity;
+    private double conversionFactor = 1.0;
 
     public SimpleEncoder(double position, double velocity) {
         this.position = position;
@@ -10,18 +11,22 @@ public class SimpleEncoder {
     }
 
     public double getPosition() {
-        return position;
+        return position * conversionFactor;
     }
 
     public double getVelocity() {
-        return velocity;
+        return velocity * conversionFactor;
+    }
+
+    public void setConversionFactor(double factor) {
+        this.conversionFactor = factor;
     }
 
     protected void setPosition(double position) {
-        this.position = position;
+        this.position = position / conversionFactor;
     }
 
     protected void setVelocity(double velocity) {
-        this.velocity = velocity;
+        this.velocity = velocity / conversionFactor;
     }
 }
