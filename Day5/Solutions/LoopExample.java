@@ -1,27 +1,39 @@
 package Day5.Solutions;
 
+import lib.Simplified.Wait;
 import lib.Simplified.Inputs.SimpleController;
 import lib.Simplified.Motors.Motor;
 
 public class LoopExample {
     public static void main(String[] args) {
         SimpleController controller = new SimpleController(0);
-        Motor motor = new Motor(1);
+        Motor shooter = new Motor(10);
 
-        boolean motorOn = false;
+        Motor leftDrive = new Motor(1);
+        Motor rightDrive = new Motor(2);
+
+        boolean shooterOn = false;
 
         while (true) {
+            // Drive control
+            leftDrive.set(controller.getLeftY());
+            rightDrive.set(controller.getRightY());
+
+            // Shooter control
             if (controller.getAButton()) {
-                motorOn = true;
+                shooterOn = true;
             } else if (controller.getBButton()) {
-                motorOn = false;
+                shooterOn = false;
             }
 
-            if (motorOn) {
-                motor.set(1);
+            if (shooterOn) {
+                shooter.set(1);
             } else {
-                motor.set(0);
+                shooter.set(0);
             }
+
+            System.out.println("Shooter speed: " + shooter.getEncoder().getVelocity());
+            Wait.waitSeconds(0.1);
         }
     }
 }
