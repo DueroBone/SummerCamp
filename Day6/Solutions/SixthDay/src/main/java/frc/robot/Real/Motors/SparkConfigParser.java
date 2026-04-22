@@ -26,6 +26,7 @@ public class SparkConfigParser {
         return parsedConfig;
     }
 
+    /** Key and data types can be found in {@link com.revrobotics.spark.config.SparkParameters} */
     private static void parseValue(int key, String value, ParsedSparkConfig parsedConfig) {
         switch (key) {
             case 6:
@@ -44,7 +45,6 @@ public class SparkConfigParser {
                 parsedConfig.velocityConversionFactor = parseFloat(value);
                 break;
             default:
-                // Ignore other keys for now
                 break;
         }
     }

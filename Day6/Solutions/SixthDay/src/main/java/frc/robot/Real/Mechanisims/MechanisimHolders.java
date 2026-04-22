@@ -50,14 +50,15 @@ public class MechanisimHolders {
         }
 
         // TODO: get values from real flywheel
+        double flywheelInertia = 0.005;
         if (doesMotorListContain(10, 11)) {
             // Create 2 motor flywheel
-            Flywheel flywheel = new Flywheel(0.006, 1, false,
+            Flywheel flywheel = new Flywheel(flywheelInertia, 1, false,
                     getMotorByPort(10), getMotorByPort(11));
             simulatedMechanisims.add(flywheel);
         } else if (doesMotorListContain(10)) {
             // Create 1 motor flywheel
-            Flywheel flywheel = new Flywheel(0.006, 1, false,
+            Flywheel flywheel = new Flywheel(flywheelInertia, 1, false,
                     getMotorByPort(10));
             simulatedMechanisims.add(flywheel);
         }

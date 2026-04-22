@@ -4,7 +4,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Real.Motors.LearnSparkMax;
 import java.util.ArrayList;
+
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class Shooter extends SubsystemBase {
   double targetRPM = 0;
@@ -13,6 +18,10 @@ public class Shooter extends SubsystemBase {
   ArrayList<Double> targetRpmHistory = new ArrayList<>();
 
   public Shooter() {
+    SparkMaxConfig config = new SparkMaxConfig();
+    config.smartCurrentLimit(40);
+    config.idleMode(IdleMode.kCoast);
+    motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -48,12 +57,12 @@ public class Shooter extends SubsystemBase {
         sb.append(rpmHistory.get(i)).append(",").append(targetRpmHistory.get(i)).append("\n");
       }
       java.nio.file.Path path = java.nio.file.Paths.get("shooter_data.csv");
-      try {
-        java.nio.file.Files.write(path, sb.toString().getBytes());
-        System.out.println("Wrote shooter data to " + path.toAbsolutePath());
-      } catch (java.io.IOException e) {
-        e.printStackTrace();
-      }
+      // try {
+      // java.nio.file.Files.write(path, sb.toString().getBytes());
+      // System.out.println("Wrote shooter data to " + path.toAbsolutePath());
+      // } catch (java.io.IOException e) {
+      // e.printStackTrace();
+      // }
       rpmHistory.clear();
       targetRpmHistory.clear();
     }

@@ -1,6 +1,7 @@
 package frc.robot.Real.Motors;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,7 +16,7 @@ public class SimulatedMotor {
     private double currentLimit = 80;
     private double posConversionFactor = 1;
     private double velConversionFactor = 1;
-    // TODO: handle properties below
+    // TODO: handle inverted
     private boolean isInverted = false;
 
     public SimulatedMotor(int port) {

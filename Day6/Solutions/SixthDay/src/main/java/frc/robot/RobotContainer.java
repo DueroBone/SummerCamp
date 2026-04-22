@@ -21,7 +21,7 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.b().onTrue(new InstantCommand(() -> shooter.setTargetRPM(0)));
 
-    m_driverController.a().onTrue(new InstantCommand(() -> shooter.setTargetRPM(3000)));
+    m_driverController.a().onTrue(new InstantCommand(() -> shooter.setTargetRPM(4500)));
     m_driverController.x().onTrue(new InstantCommand(() -> shooter.setTargetRPM(-3000)));
   }
 
