@@ -1,11 +1,9 @@
-package frc.robot.Real.Mechanisims;
-
-import java.util.Arrays;
+package frc.robot.RealisticLibrary.Mechanisims;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.robot.Real.Motors.SimulatedMotor;
+import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class Flywheel extends SimulatedMechanisim {
     FlywheelSim flywheelSim;
@@ -33,6 +31,10 @@ public class Flywheel extends SimulatedMechanisim {
 
     @Override
     public void simulationPeriodic() {
+        if (flywheelSim == null) {
+            return;
+        }
+
         flywheelSim.update(0.02);
 
         // Update position
@@ -40,7 +42,8 @@ public class Flywheel extends SimulatedMechanisim {
 
         flywheelSim.setInputVoltage(performCurrentLimiting(targetVoltage));
         if (getCurrent() >= 80) {
-            // System.out.println("A motor is now on fire! " + Arrays.toString(motors) + getCurrent());
+            // System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
+            // getCurrent());
         }
     }
 

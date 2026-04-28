@@ -1,10 +1,8 @@
-package frc.robot.Real.Mechanisims;
-
-import java.util.Arrays;
+package frc.robot.RealisticLibrary.Mechanisims;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import frc.robot.Real.Motors.SimulatedMotor;
+import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class Elevator extends SimulatedMechanisim {
     ElevatorSim elevatorSim;
@@ -25,6 +23,10 @@ public class Elevator extends SimulatedMechanisim {
 
     @Override
     public void simulationPeriodic() {
+        if (elevatorSim == null) {
+            return;
+        }
+
         elevatorSim.update(0.02);
 
         elevatorSim.setInputVoltage(performCurrentLimiting(targetVoltage));

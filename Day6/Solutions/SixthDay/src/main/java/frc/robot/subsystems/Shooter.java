@@ -2,9 +2,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Real.Motors.LearnSparkMax;
-import java.util.ArrayList;
+import frc.robot.RealisticLibrary.Motors.LearnSparkMax;
 
+import java.util.ArrayList;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
@@ -14,8 +14,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 public class Shooter extends SubsystemBase {
   double targetRPM = 0;
   LearnSparkMax motor = new LearnSparkMax(10, SparkMax.MotorType.kBrushless);
-  ArrayList<Double> rpmHistory = new ArrayList<>();
-  ArrayList<Double> targetRpmHistory = new ArrayList<>();
+  ArrayList<Double> rpmHistory = new ArrayList<>(500);
+  ArrayList<Double> targetRpmHistory = new ArrayList<>(500);
 
   public Shooter() {
     SparkMaxConfig config = new SparkMaxConfig();
@@ -34,6 +34,7 @@ public class Shooter extends SubsystemBase {
       } else {
         motor.set(0);
       }
+
     } else if (targetRPM < 0) { // going backward
       if (getCurrentRPM() > targetRPM) {
         motor.set(-1);

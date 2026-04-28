@@ -1,10 +1,8 @@
-package frc.robot.Real.Mechanisims;
-
-import java.util.Arrays;
+package frc.robot.RealisticLibrary.Mechanisims;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import frc.robot.Real.Motors.SimulatedMotor;
+import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class Arm extends SimulatedMechanisim {
     SingleJointedArmSim armSim;
@@ -24,6 +22,10 @@ public class Arm extends SimulatedMechanisim {
 
     @Override
     public void simulationPeriodic() {
+        if (armSim == null) {
+            return;
+        }
+
         armSim.update(0.02);
 
         armSim.setInputVoltage(performCurrentLimiting(targetVoltage));

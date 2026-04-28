@@ -1,7 +1,8 @@
-package frc.robot.Real.Mechanisims;
+package frc.robot.RealisticLibrary.Mechanisims;
 
 import java.util.ArrayList;
-import frc.robot.Real.Motors.SimulatedMotor;
+
+import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class MechanisimHolders {
     public static final ArrayList<SimulatedMechanisim> simulatedMechanisims = new ArrayList<>();
@@ -27,8 +28,8 @@ public class MechanisimHolders {
     }
 
     public static void generateMechanisims() {
-        if (hasGeneratedMechanisims || simulatedMotors.size() != 0) {
-            // return;
+        if (hasGeneratedMechanisims || simulatedMechanisims.size() != 0) {
+            return;
         }
 
         if (doesMotorListContain(1, 2, 3, 4, 5, 6, 7, 8)

@@ -1,14 +1,10 @@
-package frc.robot.Real.Motors;
+package frc.robot.RealisticLibrary.Motors;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.Real.Mechanisims.MechanisimHolders;
-import frc.robot.Real.Mechanisims.SimulatedMechanisim;
-import frc.robot.Real.Motors.SparkConfigParser.ParsedSparkConfig;
+import frc.robot.RealisticLibrary.Mechanisims.MechanisimHolders;
+import frc.robot.RealisticLibrary.Mechanisims.SimulatedMechanisim;
+import frc.robot.RealisticLibrary.Motors.SparkConfigParser.ParsedSparkConfig;
 
 public class SimulatedMotor {
     private int port;
@@ -25,7 +21,14 @@ public class SimulatedMotor {
         MechanisimHolders.simulatedMotors.add(this);
         // Generate all mechanisims after all motors are added
         if (!MechanisimHolders.hasGeneratedMechanisims) {
-            CommandScheduler.getInstance().schedule(new RunCommand(() -> MechanisimHolders.generateMechanisims()));
+            new Thread(() -> {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                MechanisimHolders.generateMechanisims();
+            }).start();
         }
     }
 

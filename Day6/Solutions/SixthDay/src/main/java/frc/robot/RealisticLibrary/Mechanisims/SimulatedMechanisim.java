@@ -1,7 +1,7 @@
-package frc.robot.Real.Mechanisims;
+package frc.robot.RealisticLibrary.Mechanisims;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Real.Motors.SimulatedMotor;
+import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public abstract class SimulatedMechanisim extends SubsystemBase {
     SimulatedMotor[] motors;
