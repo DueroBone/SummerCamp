@@ -1,6 +1,8 @@
 package frc.robot.RealisticLibrary.Mechanisims;
 
+import java.util.Arrays;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
@@ -28,9 +30,18 @@ public class Arm extends SimulatedMechanisim {
 
         armSim.update(0.02);
 
-        armSim.setInputVoltage(performCurrentLimiting(targetVoltage));
-        if (getCurrent() >= 80) {
-            // System.out.println("A motor is now on fire! " + Arrays.toString(motors));
+        double volt = performCurrentLimiting(targetVoltage);
+        volt = DriverStation.isEnabled() ? volt : 0;
+        armSim.setInputVoltage(volt);
+        if (getCurrent() >= 80 && getCurrent() < getCurrentLimit()) {
+            System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
+                    ", drawing " + getCurrent() + " amps");
+        }
+
+        if (armSim.hasHitUpperLimit()) {
+            System.out.println("Arm has crashed into the top!");
+        } else if (armSim.hasHitLowerLimit()) {
+            System.out.println("Arm has crashed into the bottom!");
         }
     }
 

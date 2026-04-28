@@ -1,6 +1,8 @@
 package frc.robot.RealisticLibrary.Mechanisims;
 
+import java.util.Arrays;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
@@ -29,9 +31,17 @@ public class Elevator extends SimulatedMechanisim {
 
         elevatorSim.update(0.02);
 
-        elevatorSim.setInputVoltage(performCurrentLimiting(targetVoltage));
-        if (getCurrent() >= 80) {
-            // System.out.println("A motor is now on fire! " + Arrays.toString(motors));
+        double volt = performCurrentLimiting(targetVoltage);
+        volt = DriverStation.isEnabled() ? volt : 0;
+        elevatorSim.setInputVoltage(volt);
+        if (getCurrent() >= 80 && getCurrent() < getCurrentLimit()) {
+            System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
+                    ", drawing " + getCurrent() + " amps");
+        }
+        if (elevatorSim.hasHitUpperLimit()) {
+            System.out.println("Elevator has crashed into the top!");
+        } else if (elevatorSim.hasHitLowerLimit()) {
+            System.out.println("Elevator has crashed into the bottom!");
         }
     }
 
