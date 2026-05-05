@@ -19,6 +19,9 @@ public class LearnSparkMax extends SubsystemBase {
             realMotor = new SparkMax(port, motorType);
         } else {
             simulatedMotor = new SimulatedMotor(port);
+            if (motorType == SparkMax.MotorType.kBrushed) {
+                throw new IllegalArgumentException("Brushed motors are not used anymore. A motor is now on fire.");
+            }
         }
         encoder = new LearnEncoder();
     }

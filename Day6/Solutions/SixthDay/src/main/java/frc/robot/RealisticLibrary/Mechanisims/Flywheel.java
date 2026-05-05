@@ -42,17 +42,17 @@ public class Flywheel extends SimulatedMechanisim {
         // Update position
         position += flywheelSim.getAngularVelocityRPM() * 0.02 / 60;
 
-        double volt = performCurrentLimiting(targetVoltage);
+        double volt = performCurrentLimiting(targetVoltage, motors[0]);
         volt = DriverStation.isEnabled() ? volt : 0;
         flywheelSim.setInputVoltage(volt);
-        if (getCurrent() >= 80 && getCurrent() < getCurrentLimit()) {
+        if (getCurrent(motors[0]) >= 80 && getCurrent(motors[0]) < motors[0].getCurrentLimit()) {
             System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
-                    ", drawing " + getCurrent() + " amps");
+                    ", drawing " + getCurrent(motors[0]) + " amps");
         }
     }
 
     @Override
-    public double getRpm() {
+    public double getRpm(SimulatedMotor motor) {
         double rpm = flywheelSim.getAngularVelocityRPM();
         if (Double.isNaN(rpm)) {
             return 0;
@@ -61,17 +61,17 @@ public class Flywheel extends SimulatedMechanisim {
     }
 
     @Override
-    public double getPosition() {
+    public double getPosition(SimulatedMotor motor) {
         return position / conversionFactor;
     }
 
     @Override
-    public double getCurrent() {
+    public double getCurrent(SimulatedMotor motor) {
         return flywheelSim.getCurrentDrawAmps() / motors.length;
     }
 
     @Override
-    public double getTargetVoltage() {
+    public double getTargetVoltage(SimulatedMotor motor) {
         return flywheelSim.getInputVoltage();
     }
 }

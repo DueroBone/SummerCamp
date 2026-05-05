@@ -12,13 +12,18 @@ public class SimulatedMotor {
     private double currentLimit = 80;
     private double posConversionFactor = 1;
     private double velConversionFactor = 1;
-    // TODO: handle inverted
-    private boolean isInverted = false;
+    private int isInverted = 1; // 1 for not inverted, -1 for inverted
 
     public SimulatedMotor(int port) {
         this.port = port;
 
+        for (SimulatedMotor motor : MechanisimHolders.simulatedMotors) {
+            if (motor.getPort() == port) {
+                throw new IllegalArgumentException("Two motors cannot have the same port: " + port);
+            }
+        }
         MechanisimHolders.simulatedMotors.add(this);
+
         // Generate all mechanisims after all motors are added
         if (!MechanisimHolders.hasGeneratedMechanisims) {
             new Thread(() -> {
@@ -44,7 +49,7 @@ public class SimulatedMotor {
                 : this.posConversionFactor;
         this.velConversionFactor = parsedConfig.velocityConversionFactor != null ? parsedConfig.velocityConversionFactor
                 : this.velConversionFactor;
-        this.isInverted = parsedConfig.isInverted != null ? parsedConfig.isInverted : this.isInverted;
+        this.isInverted = parsedConfig.isInverted != null && parsedConfig.isInverted ? -1 : 1;
     }
 
     public void setMechanisim(SimulatedMechanisim mechanisim) {
@@ -59,14 +64,14 @@ public class SimulatedMotor {
         if (mechanisim == null) {
             return 0;
         }
-        return mechanisim.getPosition() * posConversionFactor;
+        return mechanisim.getPosition() * posConversionFactor * isInverted;
     }
 
     public double getVelocity() {
         if (mechanisim == null) {
             return 0;
         }
-        return mechanisim.getRpm() * velConversionFactor;
+        return mechanisim.getRpm() * velConversionFactor * isInverted;
     }
 
     public double getCurrent() {
@@ -89,7 +94,7 @@ public class SimulatedMotor {
 
     public void setVoltage(double voltage) {
         if (mechanisim != null) {
-            mechanisim.setVoltage(voltage);
+            mechanisim.setVoltage(voltage * isInverted);
         }
     }
 

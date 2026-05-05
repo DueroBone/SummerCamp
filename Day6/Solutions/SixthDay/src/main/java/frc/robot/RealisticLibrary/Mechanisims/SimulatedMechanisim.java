@@ -15,35 +15,25 @@ public abstract class SimulatedMechanisim extends SubsystemBase {
         this.targetVoltage = voltage;
     }
 
-    public abstract double getRpm();
+    public abstract double getRpm(SimulatedMotor motor);
 
     /** Returns in rotations */
-    public abstract double getPosition();
+    public abstract double getPosition(SimulatedMotor motor);
 
-    public abstract double getCurrent();
+    public abstract double getCurrent(SimulatedMotor motor);
 
-    public abstract double getTargetVoltage();
+    public abstract double getTargetVoltage(SimulatedMotor motor);
 
-    protected double performCurrentLimiting(double voltage) {
-        double aveCurrentLimit = getCurrentLimit();
-
+    protected double performCurrentLimiting(double voltage, SimulatedMotor motor) {
         // If we're drawing more current than the average current limit,
         // scale down the voltage to simulate current limiting behavior.
         double scale = 1.0;
-        if (getCurrent() > aveCurrentLimit) {
-            scale = aveCurrentLimit / getCurrent();
-            // System.out.println("Current limiting! Current: " + getCurrent() + " Limit: "
-            // + aveCurrentLimit + " Scale: " + scale);
+        if (getCurrent(motor) > motor.getCurrentLimit()) {
+            scale = motor.getCurrentLimit() / getCurrent(motor);
+            // System.out.println("Current limiting! Current: " + getCurrent(motor) + " Limit: "
+            // + motor.getCurrentLimit() + " Scale: " + scale);
         }
         return voltage * scale;
         // return voltage;
-    }
-
-    protected double getCurrentLimit() {
-        double aveCurrentLimit = 0;
-        for (SimulatedMotor motor : motors) {
-            aveCurrentLimit += motor.getCurrentLimit();
-        }
-        return aveCurrentLimit / motors.length;
     }
 }

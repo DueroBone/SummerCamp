@@ -31,12 +31,12 @@ public class Elevator extends SimulatedMechanisim {
 
         elevatorSim.update(0.02);
 
-        double volt = performCurrentLimiting(targetVoltage);
+        double volt = performCurrentLimiting(targetVoltage, motors[0]);
         volt = DriverStation.isEnabled() ? volt : 0;
         elevatorSim.setInputVoltage(volt);
-        if (getCurrent() >= 80 && getCurrent() < getCurrentLimit()) {
+        if (getCurrent(motors[0]) >= 80 && getCurrent(motors[0]) < motors[0].getCurrentLimit()) {
             System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
-                    ", drawing " + getCurrent() + " amps");
+                    ", drawing " + getCurrent(motors[0]) + " amps");
         }
         if (elevatorSim.hasHitUpperLimit()) {
             System.out.println("Elevator has crashed into the top!");
@@ -46,22 +46,22 @@ public class Elevator extends SimulatedMechanisim {
     }
 
     @Override
-    public double getRpm() {
+    public double getRpm(SimulatedMotor motor) {
         return elevatorSim.getVelocityMetersPerSecond() * 60 * conversionFactor;
     }
 
     @Override
-    public double getPosition() {
+    public double getPosition(SimulatedMotor motor) {
         return elevatorSim.getPositionMeters() * conversionFactor;
     }
 
     @Override
-    public double getCurrent() {
+    public double getCurrent(SimulatedMotor motor) {
         return elevatorSim.getCurrentDrawAmps() / motors.length;
     }
 
     @Override
-    public double getTargetVoltage() {
+    public double getTargetVoltage(SimulatedMotor motor) {
         return elevatorSim.getInput(0);
     }
 }
