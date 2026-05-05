@@ -45,19 +45,21 @@ public class MechanisimHolders {
             // Climber 10, 11
         }
         if (doesMotorListContain(1, 2, 3, 4)) {
-            // TODO: Create 4 motor drivetrain
+            // TODO: Get values from real drivetrain
             DifferentialDrive drive = new DifferentialDrive(
                     0.95, 0,
                     0, 0, 0,
                     new SimulatedMotor[] { getMotorByPort(1), getMotorByPort(2) },
                     new SimulatedMotor[] { getMotorByPort(3), getMotorByPort(4) });
+            simulatedMechanisims.add(drive);
         } else if (doesMotorListContain(1, 2)) {
-            // TODO: Create 2 motor drivetrain
+            // TODO: Get values from real drivetrain
             DifferentialDrive drive = new DifferentialDrive(
                     0.95, 0,
                     0, 0, 0,
                     new SimulatedMotor[] { getMotorByPort(1) },
                     new SimulatedMotor[] { getMotorByPort(2) });
+            simulatedMechanisims.add(drive);
         }
 
         // TODO: get values from real flywheel

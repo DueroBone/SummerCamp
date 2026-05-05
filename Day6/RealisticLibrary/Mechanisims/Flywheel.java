@@ -5,11 +5,15 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class Flywheel extends SimulatedMechanisim {
     FlywheelSim flywheelSim;
     private double position = 0;
+    MechanismLigament2d flywheelDisplay;
 
     public Flywheel(double momentOfInertia, double gearing, boolean isNeo550, SimulatedMotor... motors) {
         DCMotor motor = isNeo550
@@ -29,6 +33,13 @@ public class Flywheel extends SimulatedMechanisim {
         for (SimulatedMotor _motor : motors) {
             _motor.setMechanisim(this);
         }
+
+        int firstMotorPort = motors.length > 0 ? motors[0].getPort() : 0;
+        Mechanism2d mech2d = new Mechanism2d(1, 1);
+        flywheelDisplay = new MechanismLigament2d("Flywheel", 0.25, 90); // start vertical
+        mech2d.getRoot("flywheel", 0.5, 0.5) // center of screen
+                .append(flywheelDisplay);
+        SmartDashboard.putData("Flywheel Mechanism " + firstMotorPort, mech2d);
     }
 
     @Override
@@ -41,6 +52,8 @@ public class Flywheel extends SimulatedMechanisim {
 
         // Update position
         position += flywheelSim.getAngularVelocityRPM() * 0.02 / 60;
+
+        flywheelDisplay.setAngle(position); // TODO: scale down for visualization
 
         double volt = performCurrentLimiting(targetVoltage, motors[0]);
         volt = DriverStation.isEnabled() ? volt : 0;

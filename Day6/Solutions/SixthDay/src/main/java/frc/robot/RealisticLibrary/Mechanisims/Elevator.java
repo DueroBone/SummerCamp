@@ -4,10 +4,14 @@ import java.util.Arrays;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class Elevator extends SimulatedMechanisim {
     ElevatorSim elevatorSim;
+    MechanismLigament2d elevatorDisplay;
 
     public Elevator(double gearing, double carriageMassKg, double drumRadiusMeters,
             double minHeightMeters, double maxHeightMeters, double startingHeightMeters, SimulatedMotor... motors) {
@@ -21,6 +25,14 @@ public class Elevator extends SimulatedMechanisim {
         for (SimulatedMotor _motor : motors) {
             _motor.setMechanisim(this);
         }
+
+        int firstMotorPort = motors.length > 0 ? motors[0].getPort() : 0;
+        Mechanism2d mech2d = new Mechanism2d(maxHeightMeters * 2, maxHeightMeters * 2);
+        elevatorDisplay = new MechanismLigament2d("Elevator", maxHeightMeters,
+                90); // start vertical
+        mech2d.getRoot("elevator", maxHeightMeters, maxHeightMeters) // center of screen
+                .append(elevatorDisplay);
+        SmartDashboard.putData("Elevator Mechanism " + firstMotorPort, mech2d);
     }
 
     @Override
@@ -38,6 +50,9 @@ public class Elevator extends SimulatedMechanisim {
             System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
                     ", drawing " + getCurrent(motors[0]) + " amps");
         }
+
+        elevatorDisplay.setLength(elevatorSim.getPositionMeters());
+
         if (elevatorSim.hasHitUpperLimit()) {
             System.out.println("Elevator has crashed into the top!");
         } else if (elevatorSim.hasHitLowerLimit()) {

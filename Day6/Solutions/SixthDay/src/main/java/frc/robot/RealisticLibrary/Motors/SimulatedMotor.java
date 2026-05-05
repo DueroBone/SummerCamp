@@ -64,28 +64,28 @@ public class SimulatedMotor {
         if (mechanisim == null) {
             return 0;
         }
-        return mechanisim.getPosition() * posConversionFactor * isInverted;
+        return mechanisim.getPosition(this) * posConversionFactor * isInverted;
     }
 
     public double getVelocity() {
         if (mechanisim == null) {
             return 0;
         }
-        return mechanisim.getRpm() * velConversionFactor * isInverted;
+        return mechanisim.getRpm(this) * velConversionFactor * isInverted;
     }
 
     public double getCurrent() {
         if (mechanisim == null) {
             return 0;
         }
-        return mechanisim.getCurrent();
+        return mechanisim.getCurrent(this);
     }
 
     public double getVoltage() {
         if (mechanisim == null) {
             return 0;
         }
-        return mechanisim.getTargetVoltage();
+        return mechanisim.getTargetVoltage(this);
     }
 
     public double getCurrentLimit() {

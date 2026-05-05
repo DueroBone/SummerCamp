@@ -1,7 +1,11 @@
 package frc.robot.RealisticLibrary.Mechanisims;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class DifferentialDrive extends SimulatedMechanisim {
@@ -9,6 +13,8 @@ public class DifferentialDrive extends SimulatedMechanisim {
     private double leftVoltage = 0;
     private double rightVoltage = 0;
     private final double circumference;
+    private DifferentialDriveOdometry odometry;
+    private Field2d field = new Field2d();
 
     private SimulatedMotor[] leftMotors;
     private SimulatedMotor[] rightMotors;
@@ -36,6 +42,8 @@ public class DifferentialDrive extends SimulatedMechanisim {
                 wheelRadius,
                 trackWidth,
                 null);
+
+        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0), 0, 0);
     }
 
     @Override
@@ -53,6 +61,13 @@ public class DifferentialDrive extends SimulatedMechanisim {
 
         driveSim.setInputs(leftVolt, rightVolt);
         driveSim.update(0.02);
+
+        odometry.update(driveSim.getHeading(),
+                driveSim.getLeftPositionMeters(),
+                driveSim.getRightPositionMeters());
+        field.setRobotPose(odometry.getPoseMeters());
+
+        SmartDashboard.putData("Robot field position", field);
     }
 
     @Override

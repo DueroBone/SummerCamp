@@ -2,12 +2,17 @@ package frc.robot.RealisticLibrary.Mechanisims;
 
 import java.util.Arrays;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class Arm extends SimulatedMechanisim {
     SingleJointedArmSim armSim;
+    MechanismLigament2d armDisplay;
 
     public Arm(double gearing, double momentOfInertia, double armLengthMeters, double minAngleRadians,
             double maxAngleRadians, double startingAngleRadians, SimulatedMotor... motors) {
@@ -20,6 +25,14 @@ public class Arm extends SimulatedMechanisim {
         for (SimulatedMotor _motor : motors) {
             _motor.setMechanisim(this);
         }
+
+        int firstMotorPort = motors.length > 0 ? motors[0].getPort() : 0;
+        Mechanism2d mech2d = new Mechanism2d(armLengthMeters * 2, armLengthMeters * 2);
+        armDisplay = new MechanismLigament2d("Arm", armLengthMeters,
+                Units.radiansToDegrees(startingAngleRadians));
+        mech2d.getRoot("arm", armLengthMeters, armLengthMeters) // center of screen
+                .append(armDisplay);
+        SmartDashboard.putData("Arm Mechanism " + firstMotorPort, mech2d);
     }
 
     @Override
@@ -37,6 +50,8 @@ public class Arm extends SimulatedMechanisim {
             System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
                     ", drawing " + getCurrent(motors[0]) + " amps");
         }
+
+        armDisplay.setAngle(armSim.getAngleRads());
 
         if (armSim.hasHitUpperLimit()) {
             System.out.println("Arm has crashed into the top!");
