@@ -1,0 +1,146 @@
+================================================================================
+FRC CODE REFACTORING CHALLENGE - ANSWER KEY
+================================================================================
+
+This document lists all the bugs, logic errors, and bad practices that students
+need to identify and fix in the code.
+
+================================================================================
+REMAINING BUGS - CRITICAL (Will Cause Crashes)
+================================================================================
+
+KEEP / FIX THESE:
+
+2. ⚠️ DIVISION BY ZERO in Robot.java - teleopPeriodic()
+   Location: Line ~120
+   Problem: tempMotorOutput initialized to 0, so division by zero can occur
+   Code: double ratio = shooterSpeed / tempMotorOutput;
+   Fix: Add check: if (tempMotorOutput != 0) before division
+        Or: if (tempMotorOutput > 0) double ratio = shooterSpeed / tempMotorOutput;
+
+3. ⚠️ STATIC MOTOR FIELD CONFLICT in Shooter.java
+   Location: Line 16
+   Problem: shooterMotor is declared as STATIC, meaning all Shooter instances
+            share the same motor. This is a subtle but dangerous bug.
+   Code: public static LearnSparkMax shooterMotor = new LearnSparkMax(10, MotorType.kBrushless);
+   Fix: Remove the "static" keyword:
+        public LearnSparkMax shooterMotor = new LearnSparkMax(10, MotorType.kBrushless);
+
+FIXED ✓:
+1. ARRAYINDEXOUTOFBOUNDSEXCEPTION in Robot.java - removed speedArray
+4. ARRAYINDEXOUTOFBOUNDSEXCEPTION in Shooter.java - removed modeMultipliers array
+
+================================================================================
+REMAINING BUGS - LOGIC (Program Runs But Doesn't Work Correctly)
+================================================================================
+
+KEEP / FIX THIS:
+
+7. ⚠️ LOGIC ERROR - DUPLICATE CONDITIONS INSTEAD OF CONDITIONAL
+   Location: Shooter.java periodic() lines ~50-53
+   Problem: Both conditions can be true simultaneously, causing conflicting
+            speed adjustments in the same cycle
+   Code: 
+      if (currentVelocity < theSpeedThatWeWantToBeAtWhenWeAreShooting * 0.9) {
+        motorPower += 0.05;
+      }
+      if (currentVelocity > theSpeedThatWeWantToBeAtWhenWeAreShooting * 1.1) {
+        motorPower -= 0.02;
+      }
+   Fix: Change second "if" to "else if":
+      if (currentVelocity < theSpeedThatWeWantToBeAtWhenWeAreShooting * 0.9) {
+        motorPower += 0.05;
+      } else if (currentVelocity > theSpeedThatWeWantToBeAtWhenWeAreShooting * 1.1) {
+        motorPower -= 0.02;
+      }
+
+FIXED ✓:
+5. Duplicate subsystem instance - removed duplicateShooter
+6. Both subsystems share motor - removed duplicate motor control line
+8. Unreachable code paths - removed else block with invalid motorPower = -1
+9. Poor state management - removed unreachable else case
+
+================================================================================
+REMAINING BAD PRACTICES (Code Works But Not Following FRC Best Practices)
+================================================================================
+
+These still need fixing:
+
+10. DUPLICATE SUBSYSTEM IN ROBOT.CLASS - Robot.java
+    Location: Line 21
+    Problem: Shooter shooter2 = new Shooter() duplicates the RobotContainer's
+             shooter instance. All subsystems should be in RobotContainer.
+    Fix: Remove shooter2 and access m_robotContainer.shooter instead
+         Or use a public getter method in RobotContainer
+
+13. POOR VARIABLE NAMING
+    Location: Robot.java
+    Problem: Joystick j, int s, etc.
+    Fix: Use descriptive names: driverController, shooterIndex, etc.
+
+14. MAGIC NUMBERS
+    Location: Throughout all files
+    Problem: Numbers like 5000, 2500, 0.05, 0.02 have no explanation
+    Fix: Define as named constants in a Constants class:
+         public static final int SHOOTER_SPEED_MAX = 5000;
+         public static final int SHOOTER_SPEED_IDLE = 2500;
+
+15. EXCESSIVE LOGGING IN PERIODIC
+    Location: Shooter.java line 56-58
+    Problem: System.out.println() every 50 cycles wastes CPU and can cause lag
+    Fix: Use SmartDashboard or remove if not needed for debugging
+
+16. PUBLIC FIELDS INSTEAD OF ENCAPSULATION
+    Location: Shooter.java lines 16 and following
+    Problem: Fields like shooterMotor, globalShooterMode are public, allowing
+             uncontrolled access from anywhere
+    Fix: Make private or protected, provide public methods to control
+
+17. INCONSISTENT VARIABLE INITIALIZATION
+    Location: Shooter.java line 28
+    Problem: motorPower initialized to 0.5 but logic expects 0
+    Fix: Initialize to 0.0
+
+18. REDUNDANT NULL CHECK
+    Location: Shooter.java lines 53-54
+    Problem: if (shooterMotor != null) but shooterMotor is initialized in constructor
+    Fix: Remove the null check or initialize properly if it could be null
+
+19. THREAD.SLEEP() IN AUTONOMOUS COMMAND
+    Location: RobotContainer.java getAutonomousCommand()
+    Problem: Blocking the robot thread for 2 seconds
+    Fix: Use WaitCommand or SequentialCommandGroup for delays
+
+================================================================================
+SUMMARY - WHAT STUDENTS NEED TO FIX (Simplified Lesson)
+================================================================================
+
+Priority 1 (MUST FIX - Crashes):
+  ⚠️ Remove "static" from shooterMotor in Shooter.java (Line 16)
+  ⚠️ Fix division by zero in Robot.teleopPeriodic() (Line ~120)
+
+Priority 2 (SHOULD FIX - Logic Errors):
+  • Change second "if" to "else if" in Shooter.periodic() for PID logic
+  • Remove Shooter shooter2 from Robot class
+  • Fix poor variable naming (j → driverController, etc.)
+
+Priority 3 (NICE TO FIX - Code Quality):
+  • Move magic numbers to Constants class
+  • Replace println() with SmartDashboard logging
+  • Make fields private with getters/setters
+  • Replace Thread.sleep() with proper Command delays
+
+================================================================================
+BUGS FIXED FOR THIS LESSON (To keep it reasonable)
+================================================================================
+
+✓ Removed ArrayIndexOutOfBoundsException from speedArray access
+✓ Removed duplicate subsystem instance (duplicateShooter)
+✓ Removed array bounds issues with modeMultipliers
+✓ Removed unreachable code in Shooter.periodic()
+✓ Cleaned up motor control redundancy
+
+These fixes help prevent crashes while leaving realistic bugs for students
+to discover and correct during the lesson.
+
+================================================================================

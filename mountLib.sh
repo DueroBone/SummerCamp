@@ -8,4 +8,6 @@ sudo mount --bind lib/RealisticLibrary Day6/Solutions/SixthDay/src/main/java/frc
 
 # Seventh day
 mkdir -p Day7/SeventhDay/src/main/java/frc/robot/RealisticLibrary
+mkdir -p Day7/Solutions/SeventhDay/src/main/java/frc/robot/RealisticLibrary
 sudo mount --bind lib/RealisticLibrary Day7/SeventhDay/src/main/java/frc/robot/RealisticLibrary
+sudo mount --bind lib/RealisticLibrary Day7/Solutions/SeventhDay/src/main/java/frc/robot/RealisticLibrary
