@@ -11,7 +11,7 @@ public abstract class SimulatedMechanisim extends SubsystemBase {
     @Override
     public abstract void simulationPeriodic();
 
-    public final void setVoltage(double voltage) {
+    public void setVoltage(double voltage, SimulatedMotor motor) {
         this.targetVoltage = voltage;
     }
 
@@ -30,10 +30,19 @@ public abstract class SimulatedMechanisim extends SubsystemBase {
         double scale = 1.0;
         if (getCurrent(motor) > motor.getCurrentLimit()) {
             scale = motor.getCurrentLimit() / getCurrent(motor);
-            // System.out.println("Current limiting! Current: " + getCurrent(motor) + " Limit: "
+            // System.out.println("Current limiting! Current: " + getCurrent(motor) + "
+            // Limit: "
             // + motor.getCurrentLimit() + " Scale: " + scale);
         }
-        return voltage * scale;
+        return Math.min(voltage, MechanisimHolders.getBatteryVoltage()) * scale;
         // return voltage;
+    }
+
+    protected String getMotorPorts() {
+        StringBuilder sb = new StringBuilder();
+        for (SimulatedMotor motor : motors) {
+            sb.append(motor.getPort()).append(" ");
+        }
+        return sb.toString().trim();
     }
 }

@@ -1,27 +1,17 @@
 package frc.robot.RealisticLibrary.Motors;
 
 public class LearnEncoder {
-    private double position;
-    private double velocity;
+    private LearnSparkMax sparkMax;
 
-    public LearnEncoder() {
-        this.position = 0;
-        this.velocity = 0;
+    public LearnEncoder(LearnSparkMax sparkMax) {
+        this.sparkMax = sparkMax;
     }
 
     public double getPosition() {
-        return position;
+            return sparkMax.getPosition();
     }
 
     public double getVelocity() {
-        return velocity;
-    }
-
-    public void setPosition(double position) {
-        this.position = position;
-    }
-
-    public void setVelocity(double velocity) {
-        this.velocity = velocity;
+            return sparkMax.getVelocity();
     }
 }

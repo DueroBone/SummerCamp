@@ -12,8 +12,9 @@ import frc.robot.RealisticLibrary.Motors.SimulatedMotor;
 
 public class Flywheel extends SimulatedMechanisim {
     FlywheelSim flywheelSim;
-    private double position = 0;
+    private double position = 0.001;
     MechanismLigament2d flywheelDisplay;
+    int ctr;
 
     public Flywheel(double momentOfInertia, double gearing, boolean isNeo550, SimulatedMotor... motors) {
         DCMotor motor = isNeo550
@@ -34,12 +35,11 @@ public class Flywheel extends SimulatedMechanisim {
             _motor.setMechanisim(this);
         }
 
-        int firstMotorPort = motors.length > 0 ? motors[0].getPort() : 0;
         Mechanism2d mech2d = new Mechanism2d(1, 1);
-        flywheelDisplay = new MechanismLigament2d("Flywheel", 0.25, 90); // start vertical
+        flywheelDisplay = new MechanismLigament2d("Flywheel", 0.33, 90);
         mech2d.getRoot("flywheel", 0.5, 0.5) // center of screen
                 .append(flywheelDisplay);
-        SmartDashboard.putData("Flywheel Mechanism " + firstMotorPort, mech2d);
+        SmartDashboard.putData("Flywheel Mechanism " + getMotorPorts(), mech2d);
     }
 
     @Override
@@ -53,14 +53,22 @@ public class Flywheel extends SimulatedMechanisim {
         // Update position
         position += flywheelSim.getAngularVelocityRPM() * 0.02 / 60;
 
-        flywheelDisplay.setAngle(position); // TODO: scale down for visualization
+        if (position != 0) {
+            flywheelDisplay.setAngle(position * 180 / Math.PI); // radians to degrees
+        } else {
+            System.out.println("Flywheel position is NaN, not updating display " + ctr++);
+        }
 
         double volt = performCurrentLimiting(targetVoltage, motors[0]);
         volt = DriverStation.isEnabled() ? volt : 0;
         flywheelSim.setInputVoltage(volt);
-        if (getCurrent(motors[0]) >= 80 && getCurrent(motors[0]) < motors[0].getCurrentLimit()) {
-            System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
-                    ", drawing " + getCurrent(motors[0]) + " amps");
+
+        for (SimulatedMotor motor : motors) {
+            double amps = getCurrent(motor);
+            if (amps >= 80 && amps < motor.getCurrentLimit()) {
+                System.out.println("A motor is now on fire! " + motor +
+                        " is drawing " + amps + " amps");
+            }
         }
     }
 

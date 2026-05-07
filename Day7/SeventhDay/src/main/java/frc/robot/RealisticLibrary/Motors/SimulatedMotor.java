@@ -28,7 +28,7 @@ public class SimulatedMotor {
         if (!MechanisimHolders.hasGeneratedMechanisims) {
             new Thread(() -> {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(100 + (long)(Math.random() * 100));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -94,7 +94,7 @@ public class SimulatedMotor {
 
     public void setVoltage(double voltage) {
         if (mechanisim != null) {
-            mechanisim.setVoltage(voltage * isInverted);
+            mechanisim.setVoltage(voltage * isInverted, this);
         }
     }
 

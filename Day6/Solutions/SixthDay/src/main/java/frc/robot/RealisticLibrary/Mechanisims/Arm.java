@@ -26,13 +26,12 @@ public class Arm extends SimulatedMechanisim {
             _motor.setMechanisim(this);
         }
 
-        int firstMotorPort = motors.length > 0 ? motors[0].getPort() : 0;
         Mechanism2d mech2d = new Mechanism2d(armLengthMeters * 2, armLengthMeters * 2);
         armDisplay = new MechanismLigament2d("Arm", armLengthMeters,
                 Units.radiansToDegrees(startingAngleRadians));
         mech2d.getRoot("arm", armLengthMeters, armLengthMeters) // center of screen
                 .append(armDisplay);
-        SmartDashboard.putData("Arm Mechanism " + firstMotorPort, mech2d);
+        SmartDashboard.putData("Arm Mechanism " + getMotorPorts(), mech2d);
     }
 
     @Override
@@ -46,12 +45,16 @@ public class Arm extends SimulatedMechanisim {
         double volt = performCurrentLimiting(targetVoltage, motors[0]);
         volt = DriverStation.isEnabled() ? volt : 0;
         armSim.setInputVoltage(volt);
-        if (getCurrent(motors[0]) >= 80 && getCurrent(motors[0]) < motors[0].getCurrentLimit()) {
-            System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
-                    ", drawing " + getCurrent(motors[0]) + " amps");
+
+        for (SimulatedMotor motor : motors) {
+            double amps = getCurrent(motor);
+            if (amps >= 80 && amps < motor.getCurrentLimit()) {
+                System.out.println("A motor is now on fire! " + motor +
+                        " is drawing " + amps + " amps");
+            }
         }
 
-        armDisplay.setAngle(armSim.getAngleRads());
+        armDisplay.setAngle(armSim.getAngleRads() * 180 / Math.PI);
 
         if (armSim.hasHitUpperLimit()) {
             System.out.println("Arm has crashed into the top!");

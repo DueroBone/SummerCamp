@@ -26,13 +26,12 @@ public class Elevator extends SimulatedMechanisim {
             _motor.setMechanisim(this);
         }
 
-        int firstMotorPort = motors.length > 0 ? motors[0].getPort() : 0;
         Mechanism2d mech2d = new Mechanism2d(maxHeightMeters * 2, maxHeightMeters * 2);
-        elevatorDisplay = new MechanismLigament2d("Elevator", maxHeightMeters,
-                90); // start vertical
-        mech2d.getRoot("elevator", maxHeightMeters, maxHeightMeters) // center of screen
+        elevatorDisplay = new MechanismLigament2d("Elevator",
+                maxHeightMeters, 90);
+        mech2d.getRoot("elevator", maxHeightMeters, -maxHeightMeters * 0.5)
                 .append(elevatorDisplay);
-        SmartDashboard.putData("Elevator Mechanism " + firstMotorPort, mech2d);
+        SmartDashboard.putData("Elevator Mechanism " + getMotorPorts(), mech2d);
     }
 
     @Override
@@ -46,9 +45,13 @@ public class Elevator extends SimulatedMechanisim {
         double volt = performCurrentLimiting(targetVoltage, motors[0]);
         volt = DriverStation.isEnabled() ? volt : 0;
         elevatorSim.setInputVoltage(volt);
-        if (getCurrent(motors[0]) >= 80 && getCurrent(motors[0]) < motors[0].getCurrentLimit()) {
-            System.out.println("A motor is now on fire! " + Arrays.toString(motors) +
-                    ", drawing " + getCurrent(motors[0]) + " amps");
+
+        for (SimulatedMotor motor : motors) {
+            double amps = getCurrent(motor);
+            if (amps >= 80 && amps < motor.getCurrentLimit()) {
+                System.out.println("A motor is now on fire! " + motor +
+                        " is drawing " + amps + " amps");
+            }
         }
 
         elevatorDisplay.setLength(elevatorSim.getPositionMeters());

@@ -23,6 +23,10 @@ public class RobotContainer {
     m_driverController.x().onTrue(new InstantCommand(() -> shooter.setTargetRPM(-3000)));
   }
 
+  public void runTeleop() {
+    driveTrain.tankDrive(-m_driverController.getLeftY(), -m_driverController.getRightY());
+  }
+
   public Command getAutonomousCommand() {
     return null;
   }

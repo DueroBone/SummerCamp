@@ -4,10 +4,9 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
-public class LearnSparkMax extends SubsystemBase {
+public class LearnSparkMax {
     private final boolean isReal;
     private SparkMax realMotor;
     private SimulatedMotor simulatedMotor;
@@ -23,7 +22,7 @@ public class LearnSparkMax extends SubsystemBase {
                 throw new IllegalArgumentException("Brushed motors are not used anymore. A motor is now on fire.");
             }
         }
-        encoder = new LearnEncoder();
+        encoder = new LearnEncoder(this);
     }
 
     public void configure(SparkMaxConfig config, ResetMode resetMode, PersistMode persistMode) {
@@ -64,14 +63,27 @@ public class LearnSparkMax extends SubsystemBase {
         return encoder;
     }
 
-    @Override
-    public void periodic() {
+    public int getDeviceId() {
         if (isReal) {
-            encoder.setPosition(realMotor.getEncoder().getPosition());
-            encoder.setVelocity(realMotor.getEncoder().getVelocity());
+            return realMotor.getDeviceId();
         } else {
-            encoder.setPosition(simulatedMotor.getPosition());
-            encoder.setVelocity(simulatedMotor.getVelocity());
+            return simulatedMotor.getPort();
+        }
+    }
+
+    protected double getPosition() {
+        if (isReal) {
+            return realMotor.getEncoder().getPosition();
+        } else {
+            return simulatedMotor.getPosition();
+        }
+    }
+
+    protected double getVelocity() {
+        if (isReal) {
+            return realMotor.getEncoder().getVelocity();
+        } else {
+            return simulatedMotor.getVelocity();
         }
     }
 }
