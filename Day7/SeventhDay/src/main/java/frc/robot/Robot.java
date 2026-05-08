@@ -17,17 +17,13 @@ public class Robot extends TimedRobot {
   private final RobotContainer m_robotContainer;
 
   // BAD PRACTICE: Duplicating subsystems here instead of using RobotContainer
-  Shooter shooter2 = new Shooter();
+  Shooter shooter = new Shooter();
 
   // BAD PRACTICE: Magic numbers and global state
   public static int shooterSpeed = 0;
   public static boolean shouldShoot = false;
   public static int counter = 0;
   public static double tempMotorOutput = 0;
-
-  // BAD PRACTICE: Poor variable naming
-  Joystick j = new Joystick(0);
-  int s = 0;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -55,27 +51,13 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
 
-    // BAD PRACTICE: Complex logic directly in robot periodic
     counter++;
-    if (counter > 5000000)
+    if (counter > 5000000) {
       counter = 0;
-
-    // BAD PRACTICE: Direct motor control without abstraction
-    if (j.getRawButton(1)) {
-      shooter2.shooterMotor.set(1.0);
-      shooterSpeed = 5000;
-      shouldShoot = true;
-    } else if (j.getRawButton(2)) {
-      shooter2.shooterMotor.set(0.5);
-      shooterSpeed = 2500;
-    } else {
-      shooter2.shooterMotor.set(0);
-      shooterSpeed = 0;
-      shouldShoot = false;
     }
 
     // BAD PRACTICE: Inefficient string operations in periodic
-    System.out.println("Current speed: " + shooter2.shooterMotor.getEncoder().getVelocity() + " desired: "
+    System.out.println("Current speed: " + shooter.shooterMotor.getEncoder().getVelocity() + " desired: "
         + shooterSpeed + " should shoot: " + shouldShoot);
   }
 
@@ -87,10 +69,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    // BAD PRACTICE: Running controller logic in disabled mode
-    if (j.getRawAxis(0) != 0) {
-      System.out.println("CONTROLLER INPUT DETECTED IN DISABLED MODE!");
-    }
   }
 
   /**
@@ -121,36 +99,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // BAD PRACTICE: Complex nested if statements (spaghetti)
-    if (j.getRawButton(1)) {
-      if (j.getRawButton(2)) {
-        if (j.getRawButton(3)) {
-          shooter2.shooterMotor.set(0.3);
-        } else {
-          if (j.getRawAxis(0) > 0.5) {
-            shooter2.shooterMotor.set(0.7);
-          } else if (j.getRawAxis(0) < -0.5) {
-            shooter2.shooterMotor.set(-0.5);
-          } else {
-            shooter2.shooterMotor.set(0.5);
-          }
-        }
-      } else {
-        if (j.getPOV() == 0) {
-          shooter2.shooterMotor.set(1.0);
-        } else if (j.getPOV() == 180) {
-          shooter2.shooterMotor.set(0);
-        } else {
-          shooter2.shooterMotor.set(0.9);
-        }
-      }
-    } else {
-      // BUG: Logic error - this code never executes when shooterSpeed should be used
-      if (shooterSpeed > 0) {
-        double ratio = shooterSpeed / tempMotorOutput; // BUG: Potential division by zero
-        shooter2.shooterMotor.set(ratio);
-      }
-    }
   }
 
   @Override
@@ -160,12 +108,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    // BAD PRACTICE: Sending motor commands directly in test mode
-    if (j.getRawButton(10)) {
-      for (int i = 0; i < 1000; i++) {
-        shooter2.shooterMotor.set(1.0);
-      }
-    }
   }
 
   @Override

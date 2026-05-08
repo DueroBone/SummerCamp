@@ -5,13 +5,17 @@
 package frc.robot;
 
 import frc.robot.subsystems.Shooter;
+import frc.robot.commands.BasicAutoCommand;
+import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
-  Shooter shooter = new Shooter();
+  public final Shooter shooter = new Shooter();
+  public final DriveTrain drivetrain = new DriveTrain();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   CommandXboxController m_driverController = new CommandXboxController(0);
@@ -22,12 +26,14 @@ public class RobotContainer {
 
   private void configureBindings() {
     // BAD PRACTICE: Button bindings with magic numbers and unclear logic
+    // Shoot
     m_driverController.a().onTrue(new InstantCommand(() -> {
-      shooter.shooterMotor.set(0.75);
+      shooter.motorPercent = 1;
     }));
 
+    // Stop
     m_driverController.b().onTrue(new InstantCommand(() -> {
-      shooter.shooterMotor.set(1.0);
+      shooter.shooterMotor.set(0);
     }));
 
     m_driverController.x().onTrue(new InstantCommand(() -> {
@@ -45,14 +51,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // BAD PRACTICE: Hardcoded autonomous behavior
-    return new InstantCommand(() -> {
-      shooter.shooterMotor.set(0.9);
-      try {
-        Thread.sleep(2000); // BAD PRACTICE: Blocking in autonomous
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-      shooter.shooterMotor.set(0);
-    });
+    return new BasicAutoCommand(this);
   }
 }

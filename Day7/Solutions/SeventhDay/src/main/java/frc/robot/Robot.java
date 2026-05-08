@@ -7,90 +7,39 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Shooter;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.wpilibj.Joystick;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
   private final RobotContainer m_robotContainer;
-
-  // BAD PRACTICE: Duplicating subsystems here instead of using RobotContainer
-  Shooter shooter2 = new Shooter();
-
-  // BAD PRACTICE: Magic numbers and global state
-  public static int shooterSpeed = 0;
-  public static boolean shouldShoot = false;
-  public static int counter = 0;
-  public static double tempMotorOutput = 0;
-
-  // BAD PRACTICE: Poor variable naming
-  Joystick j = new Joystick(0);
-  int s = 0;
 
   /**
    * This function is run when the robot is first started up and should be used
-   * for any
-   * initialization code.
+   * for any initialization code.
    */
   public Robot() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
   }
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items
-   * like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
+   * like diagnostics that you want ran during disabled, autonomous, teleoperated
+   * and test.
    *
    * <p>
    * This runs after the mode specific periodic functions, but before LiveWindow
-   * and
-   * SmartDashboard integrated updating.
+   * and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
-    // BAD PRACTICE: Complex logic directly in robot periodic
-    counter++;
-    if (counter > 5000000)
-      counter = 0;
-
-    // BAD PRACTICE: Direct motor control without abstraction
-    if (j.getRawButton(1)) {
-      shooter2.shooterMotor.set(1.0);
-      shooterSpeed = 5000;
-      shouldShoot = true;
-    } else if (j.getRawButton(2)) {
-      shooter2.shooterMotor.set(0.5);
-      shooterSpeed = 2500;
-    } else {
-      shooter2.shooterMotor.set(0);
-      shooterSpeed = 0;
-      shouldShoot = false;
-    }
-
-    // BAD PRACTICE: Inefficient string operations in periodic
-    System.out.println("Current speed: " + shooter2.shooterMotor.getEncoder().getVelocity() + " desired: "
-        + shooterSpeed + " should shoot: " + shouldShoot);
   }
 
   @Override
   public void disabledInit() {
-    // BAD PRACTICE: Not resetting state properly
-    shooterSpeed = 0;
   }
 
   @Override
   public void disabledPeriodic() {
-    // BAD PRACTICE: Running controller logic in disabled mode
-    if (j.getRawAxis(0) != 0) {
-      System.out.println("CONTROLLER INPUT DETECTED IN DISABLED MODE!");
-    }
   }
 
   /**
@@ -101,7 +50,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
@@ -121,36 +69,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // BAD PRACTICE: Complex nested if statements (spaghetti)
-    if (j.getRawButton(1)) {
-      if (j.getRawButton(2)) {
-        if (j.getRawButton(3)) {
-          shooter2.shooterMotor.set(0.3);
-        } else {
-          if (j.getRawAxis(0) > 0.5) {
-            shooter2.shooterMotor.set(0.7);
-          } else if (j.getRawAxis(0) < -0.5) {
-            shooter2.shooterMotor.set(-0.5);
-          } else {
-            shooter2.shooterMotor.set(0.5);
-          }
-        }
-      } else {
-        if (j.getPOV() == 0) {
-          shooter2.shooterMotor.set(1.0);
-        } else if (j.getPOV() == 180) {
-          shooter2.shooterMotor.set(0);
-        } else {
-          shooter2.shooterMotor.set(0.9);
-        }
-      }
-    } else {
-      // BUG: Logic error - this code never executes when shooterSpeed should be used
-      if (shooterSpeed > 0) {
-        double ratio = shooterSpeed / tempMotorOutput; // BUG: Potential division by zero
-        shooter2.shooterMotor.set(ratio);
-      }
-    }
   }
 
   @Override
@@ -160,12 +78,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    // BAD PRACTICE: Sending motor commands directly in test mode
-    if (j.getRawButton(10)) {
-      for (int i = 0; i < 1000; i++) {
-        shooter2.shooterMotor.set(1.0);
-      }
-    }
   }
 
   @Override

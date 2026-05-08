@@ -13,20 +13,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RealisticLibrary.Motors.LearnSparkMax;
 
 public class Shooter extends SubsystemBase {
-  public static LearnSparkMax shooterMotor = new LearnSparkMax(10, MotorType.kBrushless); // BAD PRACTICE: Public field
-                                                                                          // + STATIC = BUG
+  public LearnSparkMax shooterMotor = new LearnSparkMax(10, MotorType.kBrushless);
   public int theSpeedThatWeWantToBeAt = 0;
   public final int theSpeedThatWeWantToBeAtWhenWeAreShooting = 5000;
   public final int theSpeedThatWeWantToBeAtWhenWeAreNotShooting = 2500;
 
   // BAD PRACTICE: Inconsistent state management
-  public int globalShooterMode = 0; // 0=idle, 1=shooting, 2=coast
+  public int globalShooterMode = 1; // 0=idle, 1=shooting, 2=coast
   public double lastVelocity = 0;
   public double velocityChangeThreshold = 1000; // Magic number
 
   // BAD PRACTICE: No consistent configuration
-  private double motorPower = 0.5;
-  private int updateCounter = 0;
+  public double motorPercent = 10;
+  public int updateCounter = 0;
 
   public Shooter() {
     SparkMaxConfig config = new SparkMaxConfig();
@@ -39,41 +38,74 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     updateCounter++;
 
-    // BAD PRACTICE: Complex spaghetti logic with poor state management
     double currentVelocity = shooterMotor.getEncoder().getVelocity();
+    double targetSpeed = theSpeedThatWeWantToBeAt;
+    double newMotorPercent = motorPercent;
 
-    // BAD PRACTICE: Bizarre control logic
     if (globalShooterMode == 0) {
-      motorPower = 0;
-    } else if (globalShooterMode == 1) {
-      // BUG: Logic bug - both conditions can be true, should use "else if"
-      if (currentVelocity < theSpeedThatWeWantToBeAtWhenWeAreShooting * 0.9) {
-        motorPower += 0.05;
-      }
-      if (currentVelocity > theSpeedThatWeWantToBeAtWhenWeAreShooting * 1.1) {
-        motorPower -= 0.02;
-      }
-      if (motorPower > 1.0)
-        motorPower = 1.0;
-      if (motorPower < 0.0)
-        motorPower = 0.0;
-    } else if (globalShooterMode == 2) {
-      motorPower = 0;
+      targetSpeed = theSpeedThatWeWantToBeAtWhenWeAreNotShooting;
+      newMotorPercent = 0;
     }
 
-    // BAD PRACTICE: Redundant condition checking
+    if (globalShooterMode == 1) {
+      targetSpeed = theSpeedThatWeWantToBeAtWhenWeAreShooting;
+
+      if (currentVelocity < targetSpeed) {
+        newMotorPercent = newMotorPercent + 0.03;
+      }
+
+      if (currentVelocity < targetSpeed * 0.9) {
+        newMotorPercent = newMotorPercent + 0.02;
+      }
+
+      if (currentVelocity > targetSpeed) {
+        newMotorPercent = newMotorPercent - 0.01;
+      }
+
+      if (currentVelocity > targetSpeed * 1.1) {
+        newMotorPercent = newMotorPercent - 0.02;
+      }
+    }
+
+    if (globalShooterMode == 2) {
+      targetSpeed = 0;
+      newMotorPercent = 0;
+    }
+
+    if (globalShooterMode != 0) {
+      if (globalShooterMode != 2) {
+        if (newMotorPercent > 1.0) {
+          newMotorPercent = 1.0;
+        }
+      }
+    }
+
+    if (newMotorPercent < 0.0) {
+      newMotorPercent = 0.0;
+    }
+
+    if (newMotorPercent > 1.0) {
+      newMotorPercent = 1.0;
+    }
+
     if (shooterMotor != null) {
-      if (motorPower >= 0) {
-        shooterMotor.set(motorPower);
+      if (newMotorPercent >= 0) {
+        shooterMotor.set(newMotorPercent);
       } else {
         shooterMotor.set(0);
       }
     }
 
-    // BAD PRACTICE: Unnecessary logging in periodic
-    if (updateCounter % 50 == 0) {
-      System.out.println("Shooter velocity: " + currentVelocity + " target: " +
-          theSpeedThatWeWantToBeAt + " power: " + motorPower);
+    motorPercent = newMotorPercent;
+
+    if (updateCounter % 50 <= 5) {
+      if (targetSpeed == 0) {
+        System.out.println("Shooter velocity: " + currentVelocity + " target: " + targetSpeed +
+            " power: " + motorPercent);
+      } else {
+        System.out.println("Shooter velocity: " + currentVelocity + " target: " + targetSpeed +
+            " power: " + motorPercent);
+      }
     }
 
     lastVelocity = currentVelocity;

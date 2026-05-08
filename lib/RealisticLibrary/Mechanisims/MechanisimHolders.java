@@ -19,6 +19,15 @@ public class MechanisimHolders {
         return true;
     }
 
+    private static boolean doesMotorListNotContain(int... ports) {
+        for (int port : ports) {
+            if (getMotorByPort(port) != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static SimulatedMotor getMotorByPort(int port) {
         for (SimulatedMotor motor : simulatedMotors) {
             if (motor.getPort() == port) {
@@ -34,18 +43,23 @@ public class MechanisimHolders {
         }
         hasGeneratedMechanisims = true;
 
-        if (doesMotorListContain(1, 2, 3, 4, 5, 6, 7, 8)
-                && !doesMotorListContain(20)) {
-            // Is from 2026 robot, create all mechanisims
+        // if (doesMotorListContain(1, 2, 3, 4, 5, 6, 7, 8)
+        // && doesMotorListNotContain(20)) {
+        // Is from 2026 robot, create all mechanisims
 
-            // LD 1, 2
-            // RD 3, 4
-            // Shooter 5
-            // Feeder 6
-            // Intake 7
-            // Conveyor 8
-            // Climber 10, 11
+        // LD 1, 2
+        // RD 3, 4
+        // Shooter 5
+        // Feeder 6
+        // Intake 7
+        // Conveyor 8
+        // Climber 10, 11
+        // }
+
+        if (doesMotorListContain(1, 2, 3, 4, 5, 6, 7, 8)) {
+            // TODO: Swerve drive
         }
+
         if (doesMotorListContain(1, 2, 3, 4)) {
             // TODO: Get values from real drivetrain
             DifferentialDrive drive = new DifferentialDrive(

@@ -19,7 +19,8 @@ public class SimulatedMotor {
 
         for (SimulatedMotor motor : MechanisimHolders.simulatedMotors) {
             if (motor.getPort() == port) {
-                throw new IllegalArgumentException("Two motors cannot have the same port: " + port);
+                // throw new IllegalArgumentException("Two motors cannot have the same port: " +
+                // port);
             }
         }
         MechanisimHolders.simulatedMotors.add(this);
@@ -28,7 +29,7 @@ public class SimulatedMotor {
         if (!MechanisimHolders.hasGeneratedMechanisims) {
             new Thread(() -> {
                 try {
-                    Thread.sleep(100 + (long)(Math.random() * 100));
+                    Thread.sleep(100 + (long) (Math.random() * 500));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
