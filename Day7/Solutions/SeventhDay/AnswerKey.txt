@@ -1,0 +1,41 @@
+Day 7 Answer Key
+
+1. Robot.java
+- Remove the extra Shooter instance from Robot and keep subsystem ownership in RobotContainer.
+- Remove the button/controller logic from robotPeriodic() and teleopPeriodic().
+- Remove the global shooter state fields and the counter-based debug printing.
+- Keep robotPeriodic() limited to CommandScheduler.getInstance().run().
+- Leave the disabled/test/simulation methods empty except for scheduler cleanup in testInit().
+
+2. RobotContainer.java
+- Make the Shooter and DriveTrain subsystems owned by RobotContainer.
+- Add the DriveTrain subsystem.
+- Replace direct motor access in button bindings with Shooter methods.
+- Bind A, B, X, and Y to setIdle(), setShooting(), setPower(), and stop().
+- Replace the blocking autonomous code with BasicAutoCommand.
+
+3. Shooter.java
+- Change to a brushless motor
+- Stop using public static motor access.
+- Replace the old globalShooterMode / motorPercent logic with a cleaner internal state machine.
+- Add setIdle(), setShooting(), stop(), getVelocity(), and setPower().
+- Clamp motor power to the valid range before sending it to the motor.
+- Show shooter velocity on SmartDashboard in periodic().
+
+4. New files students need to add
+- Add frc.robot.subsystems.DriveTrain.
+- Add frc.robot.commands.BasicAutoCommand.
+- Add frc.robot.commands.SpeedUpCommand.
+
+5. General cleanup
+- Remove unused imports and dead code left over from the messy version.
+- Avoid direct motor control outside the Shooter subsystem.
+- Avoid blocking calls in autonomous.
+
+6. Hints for students
+- The biggest cleanup is moving control logic out of Robot and into RobotContainer and the subsystems.
+- A lot of the direct motor access should turn into method calls on Shooter instead.
+- If a file is using public fields just to reach into another class, that is usually a sign it should be refactored.
+- Check for repeated logic in periodic() and try to keep the scheduler-driven flow simple.
+- Any autonomous code that pauses with Thread.sleep() should be replaced with command-based timing.
+- The new DriveTrain and command classes are part of the intended solution, so the project should not stay limited to only the original files.

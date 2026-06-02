@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RealisticLibrary.Motors.LearnSparkMax;
 
 public class Shooter extends SubsystemBase {
-  public LearnSparkMax shooterMotor = new LearnSparkMax(10, MotorType.kBrushless);
+  public LearnSparkMax shooterMotor = new LearnSparkMax(10, MotorType.kBrushed);
   public int theSpeedThatWeWantToBeAt = 0;
   public final int theSpeedThatWeWantToBeAtWhenWeAreShooting = 5000;
   public final int theSpeedThatWeWantToBeAtWhenWeAreNotShooting = 2500;
