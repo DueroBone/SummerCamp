@@ -34,7 +34,11 @@ else
 fi
 
 # --- Commit changes ---
-git add .
+git add "Day${DAY}/" "Day${PREV}/Solutions/"
 git commit -m "Day${DAY}"
+
+git push origin main
+git checkout teacher
+git pull
 
 echo "Done: Day${DAY} synced and committed."
