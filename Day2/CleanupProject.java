@@ -12,65 +12,32 @@ public class CleanupProject {
     static double shooterRPM = 0.0;
 
     public static void main(String[] args) {
-        // Print initial stats
-        System.out.println("Robot Stats:");
-        System.out.println("Shooter Enabled: " + isShooterEnabled);
-        System.out.println("Drive Speed: " + driveSpeed + " m/s");
-        System.out.println("Balls Collected: " + ballsCollected);
-        System.out.println("Shooter RPM: " + shooterRPM);
-        System.out.println();
-        Wait.waitSeconds(0.25); // Wait 0.25 seconds, makes it easier to read the output
+        printRobotStats();
 
         // Turn on shooter
         isShooterEnabled = true;
         shooterRPM = 1500.0;
-        System.out.println("Robot Stats:");
-        System.out.println("Shooter Enabled: " + isShooterEnabled);
-        System.out.println("Drive Speed: " + driveSpeed + " m/s");
-        System.out.println("Balls Collected: " + ballsCollected);
-        System.out.println("Shooter RPM: " + shooterRPM);
-        System.out.println();
-        Wait.waitSeconds(0.25);
+        printRobotStats();
 
         // Drive faster
         driveSpeed += 5;
-        System.out.println("Robot Stats:");
-        System.out.println("Shooter Enabled: " + isShooterEnabled);
-        System.out.println("Drive Speed: " + driveSpeed + " m/s");
-        System.out.println("Balls Collected: " + ballsCollected);
-        System.out.println("Shooter RPM: " + shooterRPM);
-        System.out.println();
-        Wait.waitSeconds(0.25);
+        printRobotStats();
 
         // Turn off shooter
         isShooterEnabled = false;
         shooterRPM = 0.0;
-        System.out.println("Robot Stats:");
-        System.out.println("Shooter Enabled: " + isShooterEnabled);
-        System.out.println("Drive Speed: " + driveSpeed + " m/s");
-        System.out.println("Balls Collected: " + ballsCollected);
-        System.out.println("Shooter RPM: " + shooterRPM);
-        System.out.println();
-        Wait.waitSeconds(0.25);
+        printRobotStats();
 
         driveSpeed += 0.5;
-        System.out.println("Robot Stats:");
-        System.out.println("Shooter Enabled: " + isShooterEnabled);
-        System.out.println("Drive Speed: " + driveSpeed + " m/s");
-        System.out.println("Balls Collected: " + ballsCollected);
-        System.out.println("Shooter RPM: " + shooterRPM);
-        System.out.println();
-        Wait.waitSeconds(0.25);
+        printRobotStats();
         isShooterEnabled = true;
         shooterRPM = 1500.0;
-        System.out.println("Robot Stats:");
-        System.out.println("Shooter Enabled: " + isShooterEnabled);
-        System.out.println("Drive Speed: " + driveSpeed + " m/s");
-        System.out.println("Balls Collected: " + ballsCollected);
-        System.out.println("Shooter RPM: " + shooterRPM);
-        System.out.println();
-        Wait.waitSeconds(0.25);
+        printRobotStats();
         driveSpeed -= 1;
+        printRobotStats();
+    }
+
+    private static void printRobotStats() {
         System.out.println("Robot Stats:");
         System.out.println("Shooter Enabled: " + isShooterEnabled);
         System.out.println("Drive Speed: " + driveSpeed + " m/s");

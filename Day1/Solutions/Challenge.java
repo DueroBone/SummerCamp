@@ -17,7 +17,7 @@ public class Challenge {
         double batteryLevel = 11.8;
 
         // Drive Info
-        double driveSpeed = 3.5;
+        double driveSpeed = 3.5; // m/s
         String driveWheelDiameter = "4 inches";
         int gearRatio = 12;
         int tirePressure = 0;
@@ -36,8 +36,8 @@ public class Challenge {
         int ballsCollected = 5;
 
         // Print out all the variables:
-        System.out.println("Robot Name: " + robotName);
-        System.out.println("Division: " + division);
+        System.out.println(robotName);
+        System.out.println(division);
         System.out.println("Time Left: " + timeLeft);
         System.out.println("Battery Level: " + batteryLevel);
         System.out.println("Drive Speed: " + driveSpeed);

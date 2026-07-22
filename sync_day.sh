@@ -22,13 +22,13 @@ git pull origin main
 
 # --- Pull today's folder ---
 echo "Pulling Day${DAY} from teacher branch..."
-git checkout teacher -- "Day${DAY}/"
+git checkout origin/teacher -- "Day${DAY}/"
 git rm -r --ignore-unmatch "Day${DAY}/Solutions"
 
 # --- Pull previous day's Solutions ---
 if [ "$PREV" -ge 1 ]; then
   echo "Pulling solutions from Day${PREV}..."
-  git checkout teacher -- "Day${PREV}/Solutions/"
+  git checkout origin/teacher -- "Day${PREV}/Solutions/"
 else
   echo "No previous day solutions (Day 0 skipped)."
 fi
@@ -38,7 +38,7 @@ git add "Day${DAY}/" "Day${PREV}/Solutions/"
 git commit -m "Day${DAY}"
 
 git push origin main
-git checkout teacher
+git checkout origin/teacher
 git pull
 
 echo "Done: Day${DAY} synced and committed."

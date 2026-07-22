@@ -6,6 +6,24 @@ public class SensorFeedback {
         // Simulate the robot adjusting its shooter speed and firing
         // Write your code here:
 
+        double distance = robot.getDistanceToTarget();
+        double distancePerRPM = robot.distancePerRPM;
+
+        double rpm = distance / distancePerRPM;
+        // rpm * distancePerRPM = distance
+
+        // TODO:
+        // how far aways is the target?
+        // what speed do we need to be at to hit the target?
+        // get to the speed
+        // fire the shooter
+
+        // System.out.println(currentSpeed);
+        // currentSpeed = robot.getShooterRPM();
+        // }
+
+        // System.out.println(robot.getShooterRPM());
+        // robot.fire();
     }
 
     // Do not modify anything below!
