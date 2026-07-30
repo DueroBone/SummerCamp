@@ -1,0 +1,120 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot;
+
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Shooter;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import edu.wpi.first.wpilibj.Joystick;
+
+public class Robot extends TimedRobot {
+  private Command m_autonomousCommand;
+
+  private final RobotContainer m_robotContainer;
+
+  // BAD PRACTICE: Duplicating subsystems here instead of using RobotContainer
+  Shooter shooter = new Shooter();
+
+  // BAD PRACTICE: Magic numbers and global state
+  public static int shooterSpeed = 0;
+  public static boolean shouldShoot = false;
+  public static int counter = 0;
+  public static double tempMotorOutput = 0;
+
+  /**
+   * This function is run when the robot is first started up and should be used
+   * for any
+   * initialization code.
+   */
+  public Robot() {
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
+  }
+
+  /**
+   * This function is called every 20 ms, no matter the mode. Use this for items
+   * like diagnostics
+   * that you want ran during disabled, autonomous, teleoperated and test.
+   *
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and
+   * SmartDashboard integrated updating.
+   */
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+
+    counter++;
+    if (counter > 5000000) {
+      counter = 0;
+    }
+
+    // BAD PRACTICE: Inefficient string operations in periodic
+    System.out.println("Current speed: " + shooter.shooterMotor.getEncoder().getVelocity() + " desired: "
+        + shooterSpeed + " should shoot: " + shouldShoot);
+  }
+
+  @Override
+  public void disabledInit() {
+    // BAD PRACTICE: Not resetting state properly
+    shooterSpeed = 0;
+  }
+
+  @Override
+  public void disabledPeriodic() {
+  }
+
+  /**
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
+   */
+  @Override
+  public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+    }
+  }
+
+  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousPeriodic() {
+  }
+
+  @Override
+  public void teleopInit() {
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+  }
+
+  @Override
+  public void teleopPeriodic() {
+  }
+
+  @Override
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
+
+  @Override
+  public void testPeriodic() {
+  }
+
+  @Override
+  public void simulationInit() {
+  }
+
+  @Override
+  public void simulationPeriodic() {
+  }
+}
